@@ -1,5 +1,16 @@
+// scripts/checkout.js
 document.getElementById("buy").addEventListener("click", async () => {
-  const res = await fetch("https://everpass-football-4dua2vasb-voken3959s-projects.vercel.app/api/create-checkout");
-  const data = await res.json();
-  window.location.href = data.url;
+  try {
+    const res = await fetch("/api/create-checkout", { method: "POST" });
+    const data = await res.json();
+
+    if (data.url) {
+      window.location.href = data.url; // Redirect to Stripe checkout
+    } else {
+      alert("Something went wrong");
+    }
+  } catch (err) {
+    console.error("Checkout error:", err);
+    alert("Error starting checkout");
+  }
 });
