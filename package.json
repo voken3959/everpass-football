@@ -1,0 +1,7 @@
+{
+  "name": "everpass-football",
+  "version": "1.0.0",
+  "dependencies": {
+    "stripe": "^12.10.0"
+  }
+}
