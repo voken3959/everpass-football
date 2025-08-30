@@ -1,19 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login</title>
+  <title>Football Streams Login</title>
   <style>
-    body { font-family: Arial; display: flex; justify-content: center; align-items: center; height: 100vh; background: #ff4b4b; color: #fff; }
-    .card { background: rgba(0,0,0,0.6); padding: 40px; border-radius: 12px; text-align: center; }
-    input { padding: 10px; margin: 10px 0; width: 100%; border-radius: 5px; border: none; }
-    button { padding: 10px 20px; border: none; border-radius: 5px; background: #635BFF; color: #fff; cursor: pointer; margin: 5px; }
+    body {
+      margin: 0;
+      font-family: Arial;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff4b4b, #b30000);
+      color: #fff;
+    }
+    .card {
+      background: rgba(0,0,0,0.6);
+      padding: 40px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+    input {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #loginBtn { background: #635BFF; color: #fff; }
+    #registerBtn { background: #fff; color: #635BFF; }
+    #status { margin-top: 10px; color: yellow; }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>Login</h1>
-    <input type="email" id="email" placeholder="Email" required>
-    <input type="password" id="password" placeholder="Password" required>
+    <h1>Login / Register</h1>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <br>
     <button id="loginBtn">Login</button>
     <button id="registerBtn">Register</button>
     <p id="status"></p>
@@ -38,7 +70,7 @@
           localStorage.setItem("token", data.token);
           window.location.href = "/dashboard";
         } else {
-          status.textContent = data.error;
+          status.textContent = data.error || "Login failed";
         }
       } catch (err) {
         console.error(err);
