@@ -15,8 +15,9 @@ document.getElementById("buy").addEventListener("click", async () => {
   }
 });
 
-// Skip Payment button for testing
+// Skip Payment button
 document.getElementById("skip").addEventListener("click", () => {
-  // Redirect directly to success page with dummy session_id
+  // Redirect directly to the success page in its folder
   window.location.href = "/success?session_id=skip-test";
 });
+
