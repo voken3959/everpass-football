@@ -2,6 +2,8 @@
   "name": "everpass-football",
   "version": "1.0.0",
   "dependencies": {
-    "stripe": "^12.10.0"
+    "stripe": "^12.10.0",
+    "@supabase/supabase-js": "^2.8.0",
+    "bcrypt": "^5.1.0"
   }
 }
