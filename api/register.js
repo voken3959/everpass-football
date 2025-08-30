@@ -9,17 +9,18 @@ export default async function handler(req, res) {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: "Email and password required" });
 
-  // Check if user exists
-  const { data: existing } = await supabase
+  // Check for existing user
+  const { data: existing, error: selectError } = await supabase
     .from("users")
-    .select("*")
+    .select("id")
     .eq("email", email)
     .single();
 
   if (existing) return res.status(400).json({ error: "User already exists" });
+  if (selectError && selectError.code !== "PGRST116") return res.status(500).json({ error: selectError.message });
 
+  // Hash password and insert
   const hashed = await bcrypt.hash(password, 10);
-
   const { error } = await supabase.from("users").insert([{ email, password: hashed }]);
   if (error) return res.status(500).json({ error: error.message });
 
