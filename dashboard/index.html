@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+</head>
+<body>
+  <h1>Your Gameweek Access</h1>
+  <div id="content">Loading...</div>
+
+  <script>
+    const token = localStorage.getItem("token");
+    const content = document.getElementById("content");
+
+    if (!token) {
+      content.innerHTML = 'Not logged in. <a href="/login">Login</a>';
+    } else {
+      fetch(`/api/verify-session?token=${token}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.bought) {
+            content.innerHTML = `
+              <h2>Links Unlocked:</h2>
+              <ul>
+                <li><a href="https://streamed.pk/embed/match1" target="_blank">Match 1</a></li>
+                <li><a href="https://streamed.pk/embed/match2" target="_blank">Match 2</a></li>
+                <li><a href="https://streamed.pk/embed/match3" target="_blank">Match 3</a></li>
+                <li><a href="https://streamed.pk/embed/match4" target="_blank">Match 4</a></li>
+                <li><a href="https://streamed.pk/embed/match5" target="_blank">Match 5</a></li>
+                <li><a href="https://streamed.pk/embed/match6" target="_blank">Match 6</a></li>
+                <li><a href="https://streamed.pk/embed/match7" target="_blank">Match 7</a></li>
+                <li><a href="https://streamed.pk/embed/match8" target="_blank">Match 8</a></li>
+                <li><a href="https://streamed.pk/embed/match9" target="_blank">Match 9</a></li>
+                <li><a href="https://streamed.pk/embed/match10" target="_blank">Match 10</a></li>
+              </ul>
+            `;
+          } else {
+            content.innerHTML = `
+              <p>You haven’t bought the pass yet.</p>
+              <a href="/">Buy Now</a>
+            `;
+          }
+        });
+    }
+  </script>
+</body>
+</html>
