@@ -1,25 +1,4 @@
 <!DOCTYPE html>
-<script>
-  const token = localStorage.getItem("token");
-
-  if (token) {
-    // Check if user has already bought the pass
-    fetch(`/api/verify-session?token=${token}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.bought) {
-          // Redirect straight to dashboard if they already paid
-          window.location.href = "/dashboard";
-        }
-        // else: show the normal main page with Buy/Skip buttons
-      })
-      .catch(err => {
-        console.error(err);
-        // If verification fails, show main page
-      });
-  }
-</script>
-
 <html>
 <head>
   <title>Football Streams</title>
@@ -27,7 +6,7 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #ff4b4b, #b30000); /* Red gradient */
+      background: linear-gradient(135deg, #ff4b4b, #b30000);
       color: #fff;
       display: flex;
       justify-content: center;
@@ -76,12 +55,12 @@
       background-color: #7b6fff;
     }
 
-    #skip {
+    #skip, #skipLogin {
       background-color: #fff;
       color: #635BFF;
     }
 
-    #skip:hover {
+    #skip:hover, #skipLogin:hover {
       transform: scale(1.05);
       background-color: #f0f0f0;
     }
@@ -111,11 +90,12 @@
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="card" id="mainCard">
     <h1>Football Streams</h1>
     <p>Gameweek 4 Pass – 50p</p>
     <button id="buy">Buy Access</button>
     <button id="skip">Skip Payment (Test)</button>
+    <button id="skipLogin">Skip Login (Test)</button>
 
     <div class="matches">
       <h3>Upcoming Matches:</h3>
@@ -130,5 +110,26 @@
   </div>
 
   <script src="scripts/checkout.js"></script>
+  <script>
+    // Check if user is logged in and has bought the pass
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch(`/api/verify-session?token=${token}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.bought) {
+            // Redirect logged-in buyers straight to dashboard
+            window.location.href = "/dashboard";
+          }
+          // else: show main page normally
+        })
+        .catch(err => console.error(err));
+    }
+
+    // Skip login button for testing
+    document.getElementById("skipLogin").addEventListener("click", () => {
+      window.location.href = "/dashboard?skip-test=1";
+    });
+  </script>
 </body>
 </html>
