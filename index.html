@@ -5,130 +5,56 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
       background: linear-gradient(135deg, #ff4b4b, #b30000);
       color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .card {
-      background: rgba(0, 0, 0, 0.6);
-      padding: 40px;
-      border-radius: 12px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      max-width: 400px;
-      width: 90%;
     }
-
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 10px;
-    }
-
-    p {
-      font-size: 1.2em;
-      margin-bottom: 20px;
-    }
-
+    h1 { margin-bottom: 20px; }
     button {
       padding: 15px 30px;
       margin: 10px;
-      font-size: 1em;
-      font-weight: bold;
+      font-size: 18px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: transform 0.2s, background 0.2s;
     }
-
-    #buy {
-      background-color: #635BFF;
-      color: #fff;
-    }
-
-    #buy:hover {
-      transform: scale(1.05);
-      background-color: #7b6fff;
-    }
-
-    #skip, #skipLogin {
-      background-color: #fff;
-      color: #635BFF;
-    }
-
-    #skip:hover, #skipLogin:hover {
-      transform: scale(1.05);
-      background-color: #f0f0f0;
-    }
-
-    .matches {
-      margin-top: 30px;
-      text-align: left;
-    }
-
-    .matches h3 {
-      margin-bottom: 10px;
-      font-size: 1.2em;
-    }
-
-    .matches ul {
-      list-style: none;
-      padding: 0;
-      line-height: 1.5em;
-    }
-
-    .matches li {
-      background: rgba(255,255,255,0.1);
-      padding: 5px 10px;
-      border-radius: 5px;
-      margin-bottom: 5px;
-    }
+    #buyBtn { background: #635BFF; color: #fff; }
+    #skipBtn { background: #fff; color: #635BFF; }
   </style>
 </head>
 <body>
-  <div class="card" id="mainCard">
-    <h1>Football Streams</h1>
-    <p>Gameweek 4 Pass – 50p</p>
-    <button id="buy">Buy Access</button>
-    <button id="skip">Skip Payment (Test)</button>
-    <button id="skipLogin">Skip Login (Test)</button>
+  <h1>Gameweek 4 Pass – 50p</h1>
+  <button id="buyBtn">Buy Access</button>
+  <button id="skipBtn">Skip Payment (Test)</button>
 
-    <div class="matches">
-      <h3>Upcoming Matches:</h3>
-      <ul>
-        <li>Arsenal vs Chelsea</li>
-        <li>Liverpool vs Manchester United</li>
-        <li>Tottenham vs Manchester City</li>
-        <li>Leicester vs Everton</li>
-        <li>West Ham vs Newcastle</li>
-      </ul>
-    </div>
-  </div>
-
-  <script src="scripts/checkout.js"></script>
   <script>
-    // Check if user is logged in and has bought the pass
-    const token = localStorage.getItem("token");
-    if (token) {
-      fetch(`/api/verify-session?token=${token}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.bought) {
-            // Redirect logged-in buyers straight to dashboard
-            window.location.href = "/dashboard";
-          }
-          // else: show main page normally
-        })
-        .catch(err => console.error(err));
-    }
+    // Redirect user to Stripe checkout (your existing logic)
+    document.getElementById("buyBtn").addEventListener("click", () => {
+      // Replace this with your Stripe checkout logic
+      // For demo/testing, redirect directly to success page
+      window.location.href = "/success.html";
+    });
 
-    // Skip login button for testing
-    document.getElementById("skipLogin").addEventListener("click", () => {
-      window.location.href = "/dashboard?skip-test=1";
+    // Skip Payment button for testing
+    document.getElementById("skipBtn").addEventListener("click", async () => {
+      try {
+        const res = await fetch("/api/generate-token", { method: "POST" });
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url; // go to dashboard with token
+        } else {
+          alert("Error generating access token.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error generating access token.");
+      }
     });
   </script>
 </body>
