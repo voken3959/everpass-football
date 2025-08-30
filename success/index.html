@@ -4,73 +4,46 @@
   <title>Payment Success</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       text-align: center;
       margin-top: 50px;
     }
-    a {
-      display: block;
-      margin: 10px 0;
-      color: #635BFF;
-      text-decoration: none;
-      font-weight: bold;
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <h1>Access Unlocked!</h1>
-  <p id="status">Checking payment status...</p>
-  <div id="links"></div>
+  <h1>Payment Successful!</h1>
+  <p>Redirecting you to your Gameweek dashboard...</p>
+  <button id="skipBtn">Skip Payment (for testing)</button>
 
   <script>
-    function showLinks(links) {
-      const container = document.getElementById("links");
-      document.getElementById("status").textContent = "Here are your gameweek streams:";
-      links.forEach(link => {
-        const a = document.createElement("a");
-        a.href = link;
-        a.target = "_blank";
-        a.textContent = link;
-        container.appendChild(a);
-      });
+    async function goToDashboard() {
+      try {
+        const res = await fetch("/api/generate-token", { method: "POST" });
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url; // redirect to dashboard with token
+        } else {
+          alert("Error generating access token.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error generating access token.");
+      }
     }
 
-    // Get session_id from URL
-    const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get("session_id");
+    // Automatically redirect after payment
+    goToDashboard();
 
-    if (!sessionId) {
-      document.getElementById("status").textContent = "No session found.";
-    } else if (sessionId === "skip-test") {
-      // Skip payment test
-      showLinks([
-        "https://streamed.pk/embed/match1",
-        "https://streamed.pk/embed/match2",
-        "https://streamed.pk/embed/match3",
-        "https://streamed.pk/embed/match4",
-        "https://streamed.pk/embed/match5",
-        "https://streamed.pk/embed/match6",
-        "https://streamed.pk/embed/match7",
-        "https://streamed.pk/embed/match8",
-        "https://streamed.pk/embed/match9",
-        "https://streamed.pk/embed/match10"
-      ]);
-    } else {
-      // Real Stripe flow
-      fetch(`/api/verify-session?session_id=${sessionId}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.unlocked) {
-            showLinks(data.links);
-          } else {
-            document.getElementById("status").textContent = "Payment not completed.";
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          document.getElementById("status").textContent = "Error verifying payment.";
-        });
-    }
+    // Optional Skip Payment button for testing
+    document.getElementById("skipBtn").addEventListener("click", async () => {
+      goToDashboard();
+    });
   </script>
 </body>
 </html>
