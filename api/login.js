@@ -20,6 +20,6 @@ export default async function handler(req, res) {
   const match = await bcrypt.compare(password, user.password);
   if (!match) return res.status(400).json({ error: "Invalid credentials" });
 
-  const token = Buffer.from(email).toString("base64"); // simple token for now
+  const token = Buffer.from(email).toString("base64");
   res.status(200).json({ message: "Login successful", token });
 }
