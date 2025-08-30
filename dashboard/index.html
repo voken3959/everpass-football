@@ -34,11 +34,12 @@
               </ul>
             `;
           } else {
-            content.innerHTML = `
-              <p>You haven’t bought the pass yet.</p>
-              <a href="/">Buy Now</a>
-            `;
+            content.innerHTML = `<p>You haven’t bought the pass yet.</p><a href="/">Buy Now</a>`;
           }
+        })
+        .catch(err => {
+          console.error(err);
+          content.innerHTML = 'Error verifying session.';
         });
     }
   </script>
