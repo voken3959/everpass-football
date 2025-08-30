@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dashboard</title>
+  <title>Football Streams</title>
 </head>
 <body>
-  <h1>Your Gameweek Access</h1>
-  <div id="content">Loading...</div>
+  <h1>Gameweek Access</h1>
+  <div id="content">Verifying access...</div>
 
   <script>
-    const token = localStorage.getItem("token");
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
     const content = document.getElementById("content");
 
     if (!token) {
-      content.innerHTML = 'Not logged in. <a href="/login">Login</a>';
+      content.innerHTML = 'No access token provided.';
     } else {
-      fetch(`/api/verify-session?token=${token}`)
+      fetch(`/api/verify-token?token=${token}`)
         .then(res => res.json())
         .then(data => {
-          if (data.bought) {
+          if (data.valid) {
             content.innerHTML = `
               <h2>Links Unlocked:</h2>
               <ul>
@@ -26,20 +27,11 @@
                 <li><a href="https://streamed.pk/embed/match3" target="_blank">Match 3</a></li>
                 <li><a href="https://streamed.pk/embed/match4" target="_blank">Match 4</a></li>
                 <li><a href="https://streamed.pk/embed/match5" target="_blank">Match 5</a></li>
-                <li><a href="https://streamed.pk/embed/match6" target="_blank">Match 6</a></li>
-                <li><a href="https://streamed.pk/embed/match7" target="_blank">Match 7</a></li>
-                <li><a href="https://streamed.pk/embed/match8" target="_blank">Match 8</a></li>
-                <li><a href="https://streamed.pk/embed/match9" target="_blank">Match 9</a></li>
-                <li><a href="https://streamed.pk/embed/match10" target="_blank">Match 10</a></li>
               </ul>
             `;
           } else {
-            content.innerHTML = `<p>You haven’t bought the pass yet.</p><a href="/">Buy Now</a>`;
+            content.innerHTML = 'Invalid or expired token. Please purchase access.';
           }
-        })
-        .catch(err => {
-          console.error(err);
-          content.innerHTML = 'Error verifying session.';
         });
     }
   </script>
